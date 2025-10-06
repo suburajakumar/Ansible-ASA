@@ -10,16 +10,16 @@
         command: show version
       register: version_output
 
-    - name: 2. Extract and Set ASA Version
-      # Use set_fact to run the complex parsing logic separately
+    - name: 2. Extract and Set ASA Version (Jinja2 If/Else Fix)
       ansible.builtin.set_fact:
-        # The logic is simpler and safer here: find the line, split by space, grab the last item.
-        asa_version_string: "{{ version_output.stdout[0] 
-                                | regex_search('Software Version\\s*(\\S+)', '\\1') 
-                                | first 
-                                | default('N/A_VERSION') }}"
+        asa_version_string: >
+          {% set match = version_output.stdout[0] | regex_search('Software Version\\s*(\\S+)', '\\1') %}
+          {% if match %}
+          {{ match | first }}
+          {% else %}
+          N/A_VERSION_FAILED
+          {% endif %}
 
     - name: 3. Display the ASA version
-      # Simple debug message, far less likely to fail validation
       ansible.builtin.debug:
         msg: "ASA Software Version on {{ inventory_hostname }}: {{ asa_version_string }}"
