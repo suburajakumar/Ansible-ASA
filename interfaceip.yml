@@ -1,18 +1,18 @@
 ---
-- name: Get Cisco ASA Interface Status (without collections)
+- name: Get Cisco ASA Interface Status (Final Working Command)
   hosts: cisco_asa
   gather_facts: false
   connection: network_cli 
 
   tasks:
     - name: 1. Execute 'show interface ip brief' command
-      # Use the cli_command module
       ansible.builtin.cli_command:
-        command: show interface ip brief
+        # Use the confirmed working command
+        command: show interface ip brief 
       register: int_output
 
     - name: 2. Set Fact for Interface Output (Cleaned)
-      # This cleans up the raw output string and handles potential connection issues
+      # Safely set a fact to the raw output, handling potential empty lists
       ansible.builtin.set_fact:
         asa_interfaces: "{{ int_output.stdout[0] | default('Error: No output received') }}"
 
