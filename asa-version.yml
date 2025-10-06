@@ -1,6 +1,6 @@
 ---
 - name: Get Cisco ASA version using facts module
-  hosts: your_asa_devices
+  hosts: cisco_asa
   gather_facts: false # Optional, but good practice for network devices
   connection: network_cli
   collections:
