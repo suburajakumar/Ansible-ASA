@@ -10,15 +10,17 @@
         command: show version
       register: version_output
 
-    - name: 2. Extract and Set ASA Version (String Manipulation Fix)
+    - name: 2. Extract and Set ASA Version (re.split Fix)
       ansible.builtin.set_fact:
         asa_version_string: >
-          {% set raw_line = version_output.stdout[0].split('Software Version') %}
-          {% if raw_line | length > 1 %}
-          {# Split the remainder of the line by space, strip any whitespace, and grab the first element #}
-          {{ raw_line[1] | split(' ') | select('length') | list | first | trim }}
+          {# Use re.split to split by the pattern "Software Version" and all subsequent whitespace #}
+          {% set parts = version_output.stdout[0] | re_split('Software Version\\s*') %}
+          {# The version number should be the first element of 'parts' after the split point #}
+          {% if parts | length > 1 %}
+          {# Split the resulting string by newline, take the first line, split by space, trim, and grab the first element #}
+          {{ parts[1] | split('\n') | first | split(' ') | select('length') | list | first | trim }}
           {% else %}
-          N/A_STRING_FAILED
+          N/A_RE_FAILED
           {% endif %}
 
     - name: 3. Display the ASA version
