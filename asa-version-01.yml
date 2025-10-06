@@ -14,7 +14,11 @@
 
     - name: Parse and display the ASA version
       ansible.builtin.debug:
-        msg: "ASA Software Version on {{ inventory_hostname }}: {{ version_output.stdout[0] 
-          | regex_search('Software Version\\s*([\\S]+)', '\\1') 
-          | default(['N/A']) 
-          | first }}"
+        msg: |
+          ASA Software Version on {{ inventory_hostname }}: 
+          {{ version_output.stdout[0] 
+             | regex_search('(Software Version.*)', '\\1') 
+             | first 
+             | split(' ') 
+             | last 
+             | default('N/A') }}
