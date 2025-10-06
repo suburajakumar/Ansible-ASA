@@ -10,19 +10,29 @@
         command: show version
       register: version_output
 
-    - name: 2. Extract and Set ASA Version (Standard Filters Only)
+    - name: 2. Extract and Set ASA Version (Ultimate Standard Fix)
       ansible.builtin.set_fact:
         asa_version_string: >
-          {% set start_marker = 'Software Version ' %}
-          {% set line = version_output.stdout[0].split('\n') | select('search', start_marker) | first %}
+          {# Define marker and convert entire output to lowercase for a safe search #}
+          {% set start_marker = 'software version' %}
+          {% set raw_output_lower = version_output.stdout[0] | lower %}
           
+          {# Find the correct line in the output #}
+          {% set line = raw_output_lower.split('\n') 
+                        | select('search', start_marker) 
+                        | list 
+                        | default([]) 
+                        | first %}
+
           {% if line %}
-          {# Find the position after 'Software Version ' #}
+          {# Find the position after the marker #}
           {% set version_start_index = line.find(start_marker) + start_marker | length %}
-          {# Slice the string from that index, split by space, and get the first chunk #}
-          {{ line[version_start_index:] | split(' ') | select('length') | first | trim }}
+          
+          {# Slice the string, split by space, grab the first element #}
+          {{ line[version_start_index:] | split(' ') 
+             | select('length') | first | trim }}
           {% else %}
-          N/A_FINAL_FAILED
+          N/A_UNMATCHED
           {% endif %}
 
     - name: 3. Display the ASA version
