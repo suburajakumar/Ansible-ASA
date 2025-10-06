@@ -1,0 +1,22 @@
+---
+- name: Get Cisco ASA version without collection modules
+  hosts: cisco_asa
+  gather_facts: false
+  # Use the standard network_cli connection
+  connection: network_cli 
+
+  tasks:
+    - name: Execute 'show version' command
+      # Use the cli_command module, available in ansible-core
+      ansible.builtin.cli_command:
+        command: show version
+      register: version_output
+
+    - name: Parse and display the ASA version
+      ansible.builtin.debug:
+        msg: >
+          ASA Software Version on {{ inventory_hostname }}: 
+          {{ version_output.stdout[0] 
+             | regex_search('Software Version\s*([0-9\.\(\)a-z]+)', '\\1') 
+             | first 
+          }}
