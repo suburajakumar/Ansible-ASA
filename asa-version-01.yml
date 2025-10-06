@@ -15,7 +15,7 @@
         asa_version_string: >
           {# Define the exact starting index of the version number: #}
           {# "Cisco Adaptive Security Appliance Software Version " is 57 characters long #}
-          {% set raw_version = version_output.stdout[0][57:] %}
+          {% set raw_version = version_output.stdout[0][60:] %}
           
           {# Grab the first word (the version number) from the sliced string #}
           {{ raw_version.split(' ')[0] | trim }}
