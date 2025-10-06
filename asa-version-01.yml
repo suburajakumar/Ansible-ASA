@@ -10,30 +10,15 @@
         command: show version
       register: version_output
 
-    - name: 2. Extract and Set ASA Version (Ultimate Standard Fix)
+    - name: 2. Extract and Set ASA Version (Simple Slicing Fix)
       ansible.builtin.set_fact:
         asa_version_string: >
-          {# Define marker and convert entire output to lowercase for a safe search #}
-          {% set start_marker = 'software version' %}
-          {% set raw_output_lower = version_output.stdout[0] | lower %}
+          {# Define the exact starting index of the version number: #}
+          {# "Cisco Adaptive Security Appliance Software Version " is 57 characters long #}
+          {% set raw_version = version_output.stdout[0][57:] %}
           
-          {# Find the correct line in the output #}
-          {% set line = raw_output_lower.split('\n') 
-                        | select('search', start_marker) 
-                        | list 
-                        | default([]) 
-                        | first %}
-
-          {% if line %}
-          {# Find the position after the marker #}
-          {% set version_start_index = line.find(start_marker) + start_marker | length %}
-          
-          {# Slice the string, split by space, grab the first element #}
-          {{ line[version_start_index:] | split(' ') 
-             | select('length') | first | trim }}
-          {% else %}
-          N/A_UNMATCHED
-          {% endif %}
+          {# Grab the first word (the version number) from the sliced string #}
+          {{ raw_version.split(' ')[0] | trim }}
 
     - name: 3. Display the ASA version
       ansible.builtin.debug:
