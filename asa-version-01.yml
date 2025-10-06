@@ -10,12 +10,12 @@
         command: show version
       register: version_output
 
-    - name: 2. Extract and Set ASA Version (Jinja2 If/Else Fix)
+    - name: 2. Extract and Set ASA Version (Tweak Regex)
       ansible.builtin.set_fact:
         asa_version_string: >
-          {% set match = version_output.stdout[0] | regex_search('Software Version\\s*(\\S+)', '\\1') %}
+          {% set match = version_output.stdout[0] | regex_search('Software Version.*(\\d[\\d\\.\\(\\)\\_a-zA-Z]+)', '\\1') %}
           {% if match %}
-          {{ match | first }}
+          {{ match | first | trim }}
           {% else %}
           N/A_VERSION_FAILED
           {% endif %}
