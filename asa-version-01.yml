@@ -1,7 +1,7 @@
 ---
 - name: Get Cisco ASA version without collection modules
   hosts: cisco_asa
-  gather_facts: false
+  gather_facts: true
   connection: network_cli 
 
   tasks:
