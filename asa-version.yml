@@ -1,6 +1,6 @@
 ---
 - name: Get Cisco ASA version
-  hosts: asa_firewalls
+  hosts: cisco_asa
   gather_facts: no
   connection: network_cli
   become: yes
