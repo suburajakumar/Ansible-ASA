@@ -11,6 +11,8 @@
       cisco.asa.asa_command:
         commands:
           - show version
+        # Add the timeout parameter here, e.g., 60 seconds
+        timeout: 60
       register: version_output
 
     - name: Display ASA version
