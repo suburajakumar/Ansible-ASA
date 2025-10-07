@@ -1,18 +1,18 @@
 ---
-- name: Get Cisco ASA version using facts module
-  hosts: cisco_asa
-  gather_facts: false # Optional, but good practice for network devices
+- name: Get Cisco ASA version
+  hosts: asa_firewalls
+  gather_facts: no
   connection: network_cli
-  collections:
-    - cisco.asa
-  
-  tasks:
-    - name: Collect ASA facts
-      cisco.asa.asa_facts:
-        gather_subset:
-          - all
-      register: asa_info
+  become: yes
+  become_method: enable
 
-    - name: Display the ASA Software Version
-      ansible.builtin.debug:
-        msg: "ASA Software Version on {{ inventory_hostname }}: {{ asa_info.ansible_facts.asa_version }}"
+  tasks:
+    - name: Show version on ASA device
+      cisco.asa.asa_command:
+        commands:
+          - show version
+      register: version_output
+
+    - name: Display ASA version
+      debug:
+        var: version_output.stdout_lines
