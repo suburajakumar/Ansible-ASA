@@ -1,22 +1,15 @@
----
-- name: Get Cisco ASA Interface Status (Using RAW Module)
+- name: Show IP interface brief on Cisco ASA
   hosts: cisco_asa
-  gather_facts: false
-  # Note: raw still needs the network_cli connection to work over SSH/Telnet
-  connection: network_cli 
-
+  gather_facts: no
+  collections:
+    - cisco.asa
   tasks:
-    - name: 1. Execute 'show interface ip brief' command via raw
-      ansible.builtin.raw:
-        # Use the known correct, long-form command
-        command: show interface ip brief
-      register: int_output_raw
+    - name: Run 'show ip interface brief'
+      asa_command:
+        commands:
+          - show ip interface brief
+      register: interface_brief_output
 
-    - name: 2. Set Fact for Interface Output (Cleaned for raw)
-      ansible.builtin.set_fact:
-        # The output from 'raw' is usually in a list under 'stdout_lines', join them with newlines.
-        asa_interfaces: "{{ int_output_raw.stdout_lines | join('\n') }}"
-
-    - name: 3. Display Interface Status Table
-      ansible.builtin.debug:
-        msg: "Interface IP Brief Status on {{ inventory_hostname }}:\n{{ asa_interfaces }}"
+    - name: Display interface brief output
+      debug:
+        var: interface_brief_output.stdout_lines
