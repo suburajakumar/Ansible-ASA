@@ -16,7 +16,6 @@
       asa_command:
         commands:
           - show conn count
-        enable_password: "{{ enable_password }}"        # or set directly but prefer vaulted vars
       register: conn_count_output
 
     - name: Print connection count output
