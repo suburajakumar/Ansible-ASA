@@ -9,7 +9,7 @@
     ansible_connection: network_cli
     ansible_ssh_transport: paramiko           # Optional if using paramiko transport
     ansible_become: yes
-    ansible_become_method: enable
+    #ansible_become_method: enable
     #ansible_become_pass: "{{ enable_password }}"  # Use tower credential variable if set
   tasks:
     - name: Get connection count
