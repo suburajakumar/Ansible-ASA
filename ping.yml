@@ -1,21 +1,22 @@
 ---
-- name: Execute Ping Test on Cisco ASA (Using RAW Module)
+- name: Execute Ping Test on Cisco ASA (Using asa_command)
   hosts: cisco_asa
   gather_facts: false
-  connection: network_cli 
+  connection: network_cli
+  collections:
+    - cisco.asa
 
   tasks:
-    - name: 1. Execute 'ping {{ target_ip }}' command via raw
-      # Use the raw module for maximum compatibility with strict device parsers
-      ansible.builtin.raw:
-        command: ping {{ target_ip }}
-      register: ping_output_raw
+    - name: 1. Execute 'ping {{ target_ip }}' command using asa_command
+      asa_command:
+        commands:
+          - ping {{ target_ip }}
+      register: ping_output
 
     - name: 2. Set Fact for Ping Output
-      # Join the list of output lines into a single, clean string
       ansible.builtin.set_fact:
-        asa_ping_output: "{{ ping_output_raw.stdout_lines | join('\n') }}"
+        asa_ping_output: "{{ ping_output.stdout_lines | join('\n') }}"
 
     - name: 3. Display Ping Results
       ansible.builtin.debug:
-        msg: "Ping results from {{ inventory_hostname }}:\n{{ asa_ping_output }}"
+        msg: "Ping results from {{ inventory_hostname }} to {{ target_ip }}:\n{{ asa_ping_output }}"
