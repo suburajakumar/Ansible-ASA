@@ -4,10 +4,10 @@
   collections:
     - cisco.asa
   tasks:
-    - name: Run 'show ip interface brief'
+    - name: Run 'show interface ip brief'
       asa_command:
         commands:
-          - show ip interface brief
+          - show interface ip brief
       register: interface_brief_output
 
     - name: Display interface brief output
