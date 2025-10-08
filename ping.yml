@@ -5,10 +5,10 @@
   connection: network_cli 
 
   tasks:
-    - name: 1. Execute 'ping 8.8.8.8' command via raw
+    - name: 1. Execute 'ping {{ target_ip }}' command via raw
       # Use the raw module for maximum compatibility with strict device parsers
       ansible.builtin.raw:
-        command: ping 8.8.8.8
+        command: ping {{ target_ip }}
       register: ping_output_raw
 
     - name: 2. Set Fact for Ping Output
