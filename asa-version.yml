@@ -1,21 +1,16 @@
-- name: Get Cisco ASA version
+---
+- name: Check Cisco ASA version
   hosts: cisco_asa
   gather_facts: no
-  connection: network_cli
-  become: yes
-  become_method: enable
-
-  # Add the connection timeout setting here:
-  vars:
-    ansible_command_timeout: 90 # Example: Setting the timeout to 90 seconds
-
+  collections:
+    - cisco.asa
   tasks:
-    - name: Show version on ASA device
-      cisco.asa.asa_command:
+    - name: Get ASA device version info
+      asa_command:
         commands:
           - show version
       register: version_output
 
-    - name: Display ASA version
+    - name: Display version details
       debug:
         var: version_output.stdout_lines
