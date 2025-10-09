@@ -3,6 +3,11 @@
   gather_facts: no
   collections:
     - cisco.asa
+  vars:
+    ansible_become: yes
+    ansible_become_method: enable
+    ansible_become_pass: "{{ enable_password }}"  # Use tower credential variable if set
+    
   tasks:
     - name: Address Object creation 
       asa_config:
