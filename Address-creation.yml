@@ -1,0 +1,19 @@
+---
+- name: Check Cisco ASA version
+  hosts: cisco_asa
+  gather_facts: no
+  collections:
+    - cisco.asa
+  tasks:
+    - name: Address Object creation 
+      asa_config:
+         lines:
+           - network-object host 129.6.15.28
+           - network-object host 129.6.15.29
+           - network-object host 129.6.15.30
+         parents: [object-group network NTP-Servers]
+         register: output
+
+    - name: Display version details
+      debug:
+        var: output.stdout_lines
