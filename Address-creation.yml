@@ -15,7 +15,7 @@
         lines:
           - network-object host 129.6.15.28
           - network-object host 129.6.15.29
-          - network-object host 129.6.15.30
+          #- network-object host 129.6.15.30
           - network-object host 129.6.15.27
         parents: [object-group network NTP-Servers]
       register: output
