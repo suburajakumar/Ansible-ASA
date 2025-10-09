@@ -16,4 +16,4 @@
   
 - name: Display version details
   debug:
-    var: version_output.stdout_lines
+    var: output.stdout_lines
