@@ -23,3 +23,7 @@
     - name: Display version details
       debug:
         var: output
+
+    - name: Save running-config to startup-config if modified
+      asa_config:
+        save_when: modified
