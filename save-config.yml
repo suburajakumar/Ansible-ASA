@@ -1,0 +1,19 @@
+---
+- name: save running to startup when modified
+  hosts: cisco_asa
+  gather_facts: no
+  collections:
+    - cisco.asa
+  vars:
+    ansible_become: yes
+    ansible_become_method: enable
+    ansible_become_pass: "{{ enable_password }}"  # Use tower credential variable if set
+
+- name: save running to startup when modified
+  cisco.asa.asa_config:
+    save_when: modified
+    register: output
+  
+- name: Display version details
+  debug:
+    var: version_output.stdout_lines
