@@ -12,7 +12,7 @@
     - name: Run 'show run ip'
       asa_command:
         commands:
-          - show run ip
+          - show run | i ntp
       register: interface_brief_output
 
     - name: Display interface with ip
