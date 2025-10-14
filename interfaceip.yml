@@ -12,6 +12,7 @@
     - name: Run 'show interface ip brief'
       asa_command:
         commands:
+          - sh run | i hostname
           - show interface ip brief
       register: interface_brief_output
 
